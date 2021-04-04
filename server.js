@@ -41,7 +41,7 @@ app.post('/searches', (req, res) => {
     const bookData = data.body.items;
 
     const book = bookData.map(item => {
-      return new Book(item.volumeInfo , searchBy );
+      return new Book(item.volumeInfo );
     });
 
     res.render('pages/searches/show', { books: book });
@@ -57,17 +57,17 @@ app.use('*', (req, res) => {
 
 app.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
 
-function Book(data , searchBy) {
+function Book(data ) {
   this.title = (data.title)? data.title : 'Unknown Book Title';
   this.author = (data.authors)? data.authors : 'Unknown Book Authors';
   this.description = (data.description)? data.description : 'Description not available';
   // this.thumbnail = !(bookData.imageLinks.thumbnail)?'https://i7.uihere.com/icons/829/139/596/thumbnail-caefd2ba7467a68807121ca84628f1eb.png' : bookData.imageLinks.thumbnail ;
-  if(searchBy === 'author'){
-    this.thumbnail = (data.imageLinks.thumbnail) ? data.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpg';
-  }
-  else{
-    this.thumbnail = 'https://i.imgur.com/J5LVHEL.jpg';
-  }
+  // if(searchBy === 'author'){
+  this.thumbnail = (data.imageLinks.thumbnail) ? data.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpg';
+  // }
+  // else{
+  // this.thumbnail = 'https://i.imgur.com/J5LVHEL.jpg';
+  // }
 }
 
 //helpers
