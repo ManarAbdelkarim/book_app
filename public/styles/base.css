@@ -11,6 +11,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+
 header, footer{
     height: 45px;
     background-color: black;
@@ -41,7 +42,6 @@ input[type=text]{
     height: 3vh;
     width: 74vw;
     padding: 3vw;
-    border-radius: 1vh;
     margin-bottom: 3vw;
     margin-right: 0vh;
 
@@ -71,3 +71,38 @@ button{
     color: #f5f5f5;
 
 }
+
+h2{
+    font-size: 15px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 600;
+}
+header h1 {
+    color: whitesmoke;
+    font-size: xx-large;
+  }
+  
+
+h3{
+    font-size: 13px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight: 600;
+}
+
+button{
+    margin: 10px;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  .wrapper {
+    min-height: 100%;
+  
+    margin-bottom: -50px;
+  }
+  .footer,
+  .push {
+    height: 50px;
+  }
