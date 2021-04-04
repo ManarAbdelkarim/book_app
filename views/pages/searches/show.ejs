@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show</title>
+    <link href="/public/styles/base.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+    <header>
+
+    </header>
+    <main>
+        <h1>Results:</h1>
+        <div>
+    <% books.forEach(book => { %>
+      <section id="book-section">
+        <section id="img-section">
+          <img src="<%= book.thumbnail %>" alt="">
+        </section>
+        <p><%= book.title %></p>
+        <p><%= book.author %></p>
+        <p><%= book.description %></p>
+      </section>
+    <% }); %>
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+
+</html>
