@@ -87,6 +87,7 @@ const showBookDetails = (req,res) => {
   const SQL = `SELECT * from books WHERE ID=${req.params.ID};`;
   client.query(SQL)
     .then(result => {
+      console.log(' result.rows[0]', result.rows[0]);
       res.render('pages/books/show', { books: result.rows[0]});
     }).catch((err) => errorHandler(err, req, res));
 };
@@ -140,7 +141,7 @@ function Book(data ) {
   this.description = (data.description)? data.description : 'Description not available';
   this.thumbnail = (data.imageLinks.thumbnail) ? data.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpg';
   this.isbn = data.industryIdentifiers ? `${data.industryIdentifiers[0].type} ${data.industryIdentifiers[0].identifier}` : 'Unknown ISBN';
-  this.offShelf = (data.categories) ? data.categories : `The book is not in a shelf`;
+  this.offShelf = (data.categories) ? data.categories : 'The book is not in a shelf';
 
 }
 
