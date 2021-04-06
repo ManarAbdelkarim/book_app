@@ -2,34 +2,27 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="https://www.freeiconspng.com/uploads/book-icon--icon-search-engine-6.png"
-        type="image/x-icon">
-          <link href="/public/styles/reset.css" rel="stylesheet" type="text/css"/>
-        <link href="/public/styles/layout.css" rel="stylesheet" type="text/css"/>
-    <link href="/public/styles/base.css" rel="stylesheet" type="text/css"/>
 
+    <%- include('./layouts/head') %>
     <title>Book App</title>
-    <link rel="stylesheet" href="/style.css">
-</head>
-<header>
-    <h2>Hello Books</h2>
+    <%- include('./layouts/header') %>
+ <%- include('./layouts/nav') %>
 
-</header>
 <body>
-        <nav>
-            <li><a href="/">Home</a></li>
-            <li><a href="/searches/new">Book search</a></li>
-        </nav>
-<div class="wrapper">
+ 
+<main>
+<ul>
 
-  
 
-    <div class="push"></div>
-  </div>
-  <footer class="footer"></footer>
+<h2> total number of books : <%= count %> </h2>
+ <% books.forEach(el => { %>
+ <h4> title : <%= el.title %></h4>
+ <h4> author : <%= el.author %></h4>
+   <a href="/books/<%=el.id%>">View Details</a> 
+      <% }); %>
+</ul>
+</main>
+   <%- include('./layouts/footer') %>
+
 </body>
 </html>
