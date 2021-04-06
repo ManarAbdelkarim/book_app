@@ -43,7 +43,7 @@ form {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 6vw;
+    /* padding: 6vw; */
 }
 input[type=text]{
     height: 3vh;
@@ -61,10 +61,11 @@ label{
     height: 3vh;
     width: 75vw;
     background-color: #d8d8d8;
+    margin: 1vw auto;
 }
 
 button{
-    /* display: flex; */
+    margin: 1vw auto 2vw ;
     justify-content: center;
     align-items: center;
 
@@ -96,9 +97,6 @@ h3{
     font-weight: 600;
 }
 
-button{
-    margin: 10px;
-}
 
 html, body {
     height: 100%;
