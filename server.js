@@ -1,128 +1,168 @@
 'use strict';
-
+// Dependencies
 require('dotenv').config();
 const express = require('express');
 const superagent = require('superagent');
-const PORT = process.env.PORT || 3030;
 const cors = require('cors');
 const pg = require('pg');
+const methodOverride = require('method-override');
 const app = express();
+
+// Setup environment
+const PORT = process.env.PORT || 3030;
 const DATABASE_URL = process.env.DATABASE_URL;
+
+// Middleware
+app.use(cors());
+app.use(methodOverride('_method'));
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
+
+// database Setup
 const client =  new pg.Client({
   connectionString: DATABASE_URL,
 });
 
-app.use(cors());
-
-
-app.use(express.static('public'));
-// app.use('/public', express.static('public'));
-
-app.set('view engine', 'ejs');
-
-app.get('/', (req, res) => {
+// HomePage
+const renderHomePage = (req, res) => {
   const selectAll = 'select * from books ;';
   client.query(selectAll).then((data) =>{
-    // console.log('data.rows[0]', data.rows);
     res.render('pages/index', {books : data.rows , count: data.rows.length});
-  // res.render('pages/index');
   }).catch((err) => errorHandler(err, req, res));
-});
+};
 
+// Just a test
 app.get('/hello', (req, res) => {
   res.render('pages/index');
 });
 
-
-app.use(express.urlencoded({ extended: true }));
-
-
-app.get('/searches/new', (req, res) => {
+// Search for a book by title or author
+const renderSearch = (req, res) => {
   res.render('pages/searches/new');
-});
+};
 
-app.post('/searches', (req, res) => {
-
+// Show Search Results
+const renderSearchResults = (req, res) => {
   const searchKeyword = req.body.searched;
   const searchBy = req.body.searchBy;
   // let url = `https://www.googleapis.com/books/v1/volumes?q=${req.body.searchQuery}+${req.body.searchBy === 'title' ? 'intitle' : 'inauthor'}`;
   const url = `https://www.googleapis.com/books/v1/volumes?langRestrict=en&q=${searchKeyword}+in${searchBy}:`;
 
   superagent.get(url).then((data) => {
-    // console.log(data.body);
     const bookData = data.body.items;
-
     const book = bookData.map(item => {
       return new Book(item.volumeInfo );
     });
-
     res.render('pages/searches/show', { books: book });
-
   }).catch((err) => errorHandler(err, req, res));
+};
 
-});
-
-
-
-app.post('/books', (req,res) => {
+// Adding a Book to The Home Page
+const addBookToFavorite = (req,res) => {
+  let id ;
+  let SQL = 'INSERT INTO books (title, author, description, image_url , offShelf ,isbn) VALUES ($1,$2,$3,$4,$5,$6) RETURNING ID;';
   const { title, author, description, image_url , offShelf , isbn } = req.body;
   const values = [title, author, description, image_url , offShelf ,isbn ];
   const sqlSearch = `SELECT * FROM books WHERE isbn = '${isbn}' ;`;
   client.query(sqlSearch).then((searchedResult) => {
-    // console.log('searchedResult.rows.length', searchedResult.rowCount , searchedResult.rows);
     if (searchedResult.rowCount > 0) {
-      res.redirect('/');
+      res.redirect(`/books/${searchedResult.rows[0].id}`);
     }
     else{
-      let SQL = 'INSERT INTO books (title, author, description, image_url , offShelf ,isbn) VALUES ($1,$2,$3,$4,$5,$6);';
       client.query(SQL,values)
-        .then (() => {
-          res.redirect('/');
+        .then ((result) => {
+          id =result.rows[0].id ;
+          res.redirect(`/books/${id}`);
         })
         .catch((err) => {
           errorHandler(err, req, res);
         });
     }
-
   });
-});
+};
 
-
-app.get('/books/:ID', (req,res) => {
-  // console.log('now I am here');
+// Single Book Details
+const showBookDetails = (req,res) => {
   const SQL = `SELECT * from books WHERE ID=${req.params.ID};`;
   client.query(SQL)
     .then(result => {
       res.render('pages/books/show', { books: result.rows[0]});
     }).catch((err) => errorHandler(err, req, res));
-});
+};
 
 
-app.use('*', (req, res) => {
-  res.status(404).send('Page not found');
-});
+// Update Book in The Database
+const updateBook = (req, res) => {
+  const id = req.params.ID ;
+  console.log('req.body', req.body);
+  console.log('req.params.id' , id);
+  const setSQL = `UPDATE books SET title=$1, author=$2, description=$3 , offShelf=$4, isbn=$5
+  WHERE id=$6;`;
+  const { title, author, description , offShelf , isbn } = req.body;
+  const values = [title, author, description, offShelf ,isbn , id];
+  client.query(setSQL, values)
+    .then(() => {
+      res.redirect(`/books/${id}`);
+    }).catch((err) => errorHandler(err, req, res));
+};
 
+function deleteBook(req, res) {
+  const id = req.params.ID ;
+  const deleteSQL = `DELETE FROM books WHERE ID = ${id};`;
+  client.query(deleteSQL)
+    .then(() => {
+      res.redirect(`/books/${id}`);
+    }).catch((err) => errorHandler(err, req, res));
+
+
+}
+
+// wrong path rout
+const handelWrongPath = (err, req, res) => {
+  errorHandler(err, req ,res);
+};
+
+// database connection
 client.connect().then(() => {
   app.listen(PORT, () => {
-    console.log('connected to db', client.connectionParameters.database); //show what database we are connected to
+    console.log('connected to db', client.connectionParameters.database);
     console.log(`The server is running on port ${PORT}`);
   });
 }).catch(error => {
   console.log('error', error);
 });
 
-
+// constructor
 function Book(data ) {
   this.title = (data.title)? data.title : 'Unknown Book Title';
   this.author = (data.authors)? data.authors : 'Unknown Book Authors';
   this.description = (data.description)? data.description : 'Description not available';
   this.thumbnail = (data.imageLinks.thumbnail) ? data.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpg';
   this.isbn = data.industryIdentifiers ? `${data.industryIdentifiers[0].type} ${data.industryIdentifiers[0].identifier}` : 'Unknown ISBN';
-  this.offShelf = (data.volumeInfo) ? data.volumeInfo.categories : 'The book is not in a shelf';
+  this.offShelf = (data.categories) ? data.categories : `The book is not in a shelf`;
+
 }
 
-//Handler
+// Error Handler
 function errorHandler(err, req, res) {
-  res.status(500).render('pages/error', { err :err.message});
+  res.render('pages/error', { err :err.message});
 }
 
+
+// API home page Routes
+app.get('/', renderHomePage);
+// Search for book by title or author
+app.get('/searches/new', renderSearch);
+// Search Results
+app.post('/searches', renderSearchResults);
+// Single Book Details
+app.get('/books/:ID', showBookDetails);
+// Save books and add them to homepage
+app.post('/books', addBookToFavorite);
+// Update Book in The Database
+app.put('/books/:ID', updateBook);
+// Delete Book in The Database
+app.delete('/books/:ID', deleteBook);
+// wrong path rout
+app.use('*',handelWrongPath);

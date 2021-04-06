@@ -6,21 +6,22 @@
     <%- include('./layouts/head') %>
     <title>Book App</title>
     <%- include('./layouts/header') %>
- <%- include('./layouts/nav') %>
 
 <body>
+ <%- include('./layouts/menu') %>
  
 <main>
+<section class= "card">
 <ul>
-
-
 <h2> total number of books : <%= count %> </h2>
  <% books.forEach(el => { %>
  <h4> title : <%= el.title %></h4>
  <h4> author : <%= el.author %></h4>
-   <a href="/books/<%=el.id%>">View Details</a> 
+  <button type="button"><a href="/books/<%=el.id%>">View Details</a> </button> 
       <% }); %>
 </ul>
+</section>
+
 </main>
    <%- include('./layouts/footer') %>
 

@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
- <link href="../../styles/reset.css" rel="stylesheet" type="text/css"/>
- <link href="../../styles/layout.css" rel="stylesheet" type="text/css"/>
- <link href="../../styles/base.css" rel="stylesheet" type="text/css"/>
+ <%- include('../layouts/head') %>
+
     <body>
+           <%- include('../layouts/menu') %>
            <%- include('../layouts/header') %>
+ <button type=""><a href="/">Back to HomePage </a> </button>
          <main>
     <%- include('detail') %>
-<button type=""><a href="/">Back to HomePage </a> </button>
- 
+
+
+    <%- include('../layouts/edit') %>
+
          </main>
-            
-
              <%- include('../layouts/footer') %>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/app.js"></script>
     </body>
 </html>

@@ -1,8 +1,11 @@
 <section class="card">
+
+
+<% if (books) { %>
+    <img src='<%=books.image_url %>' alt="books Cover">
     <h2>
         <%= books.title %>
     </h2>
-    <img src='<%=books.image_url %>' alt="books Cover">
     <h3>
         <%= books.author %>
     </h3>
@@ -15,4 +18,12 @@
     <p>
         booksshelf: <%= books.offShelf %>
     </p>
+           
+
+             <form action="/books/<%= books.id %>?_method=DELETE" method='POST'>
+            <button type="submit">Delete Book</button>
+        </form>
+      
+<button type="button" class="updateButton"> Update Data  </button>
+   <% } %>
 </section
