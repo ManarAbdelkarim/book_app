@@ -11,20 +11,25 @@
     "superagent": "^6.1.0"
   },
   "name": "book_app",
-  "description": "",
+  "description": "# book_app",
   "version": "1.0.0",
   "main": "server.js",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ManarAbdelkarim/book_app.git"
   },
-  "author": "",
+  "author": "manar",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ManarAbdelkarim/book_app/issues"
   },
-  "homepage": "https://github.com/ManarAbdelkarim/book_app#readme"
+  "homepage": "https://github.com/ManarAbdelkarim/book_app#readme",
+  "devDependencies": {}
 }
