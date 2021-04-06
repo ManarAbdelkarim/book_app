@@ -15,10 +15,7 @@
     <p>
         ISBN: <%= books.isbn %>
     </p>
-    <p>
-        booksshelf: <%= books.offShelf %>
-    </p>
-           
+   <p><%= books.offshelf %></p>
 
              <form action="/books/<%= books.id %>?_method=DELETE" method='POST'>
             <button type="submit">Delete Book</button>
