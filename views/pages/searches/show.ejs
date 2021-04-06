@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show</title>
-    <link href="../../styles/base.css" rel="stylesheet" type="text/css"/>
-</head>
 
-<body>
+    <title>Show</title>
+
+     <%- include('../layouts/head') %>
 
      <%- include('../layouts/header') %>
-     <%- include('../layouts/nav') %>
+<body>
+
+     <%- include('../layouts/menu') %>
 
     <main>
         <h1>Results:</h1>
         <div>
     <% books.forEach(book => { %>
-      <section id="book-section">
+    <section class="card">
         <section id="img-section">
           <img src="<%= book.thumbnail %>" alt="">
         </section>
